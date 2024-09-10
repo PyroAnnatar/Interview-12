@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 const INITIAL_LIST = [
-  { name: "Domates", value: 55.0 },
-  { name: "Marul", value: 25.5 },
-  { name: "Ekmek", value: 10.99 },
+  { name: "Domates", value: 55.0, id: crypto.randomUUID() },
+  { name: "Marul", value: 25.5, id: crypto.randomUUID() },
+  { name: "Ekmek", value: 10.99, id: crypto.randomUUID() },
 ];
 
 function App() {
@@ -24,13 +24,17 @@ const ItemValueList = () => {
     e.preventDefault();
     const processedValue = parseFloat(newItem.value).toFixed(2);
     if (newItem.name.trim() && !isNaN(processedValue)) {
-      setList((prev) => [...prev, { ...newItem, value: processedValue }]);
+      setList((prev) => [
+        ...prev,
+        { ...newItem, value: processedValue, id: crypto.randomUUID() },
+      ]);
       setNewItem({ name: "", value: "" });
     }
   }
-  function handleDelete(name) {
-    setList((prev) => [...prev.filter((item) => item.name !== name)]);
+  function handleDelete(id) {
+    setList((prev) => [...prev.filter((item) => item.id !== id)]);
   }
+  console.log(list);
   return (
     <div className="grid grid-cols-3">
       <input
@@ -59,14 +63,14 @@ const ItemValueList = () => {
         Gönder
       </button>
 
-      {list.map((item, index) => (
-        <React.Fragment key={index}>
+      {list.map((item) => (
+        <React.Fragment key={item.id}>
           <div className="col-span-1 p-2 text-center">{item.name}</div>
           <div className="col-span-1 p-2 text-center">${item.value}</div>
           <div className=" col-span-1 flex justify-center items-center">
             <div
               className="cursor-pointer "
-              onClick={() => handleDelete(item.name)}
+              onClick={() => handleDelete(item.id)}
             >
               ❌
             </div>
